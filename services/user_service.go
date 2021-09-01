@@ -6,10 +6,9 @@ import (
 	"password-manager-backend/models"
 )
 
-func CreateUser(username interface{}, email interface{}, password interface{}) models.User {
+func CreateUser(username interface{}, password interface{}) models.User {
 	user := models.User{
 		Username: fmt.Sprintf("%v", username),
-		Email:    fmt.Sprintf("%v", email),
 		Password: fmt.Sprintf("%v", password),
 	}
 	database.DB.Model(&models.User{}).Create(&user)

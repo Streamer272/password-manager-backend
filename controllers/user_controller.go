@@ -22,7 +22,7 @@ func Login(c *fiber.Ctx) error {
 		panic(err)
 	}
 
-	user := services.GetUser(data["email"])
+	user := services.GetUser(data["username"])
 
 	if user.Id == 0 {
 		c.Status(fiber.StatusBadRequest)

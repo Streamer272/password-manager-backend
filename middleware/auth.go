@@ -3,19 +3,16 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"password-manager-backend/services"
-	"strings"
 )
 
 func CheckToken(c *fiber.Ctx) error {
-	if !strings.Contains(c.Path(), "articles") {
-		return c.Next()
-	}
+	// FIXME
 
-	if c.Get("token") == "" {
+	if c.Get("tokenId") == "" {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	if !services.IsTokenValid(c.Get("token")) {
+	if !services.IsTokenValid(c.Get("tokenId")) {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 

@@ -16,9 +16,9 @@ func CreateUser(username interface{}, password interface{}) models.User {
 	return user
 }
 
-func GetUser(email interface{}) models.User {
+func GetUser(username interface{}) models.User {
 	var user models.User
-	database.DB.Model(&models.User{}).Where("email = ?", email).First(&user)
+	database.DB.Model(&models.User{}).Where("username = ?", username).First(&user)
 
 	return user
 }

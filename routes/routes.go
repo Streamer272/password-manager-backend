@@ -9,6 +9,8 @@ import (
 )
 
 func Setup(app *fiber.App) {
+	// Fix DB not null (<nil>)
+
 	app.Use(cors.New(cors.Config{}))
 
 	app.Use(exceptions.HandleException)
@@ -20,10 +22,13 @@ func Setup(app *fiber.App) {
 
 	api := app.Group("/api")
 	user := api.Group("/user")
+	password := api.Group("/password", middleware.CheckToken)
 
 	user.Put("/register", controllers.Register)
 	user.Post("/login", controllers.Login)
 	user.Post("/logout", controllers.Logout)
+
+	password.Get("/", controllers.GetPasswords)
 
 	app.Use(middleware.LogOnMiddleWare)
 }

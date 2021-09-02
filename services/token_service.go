@@ -20,18 +20,22 @@ func IsTokenValid(tokenId interface{}) bool {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
+	defer func() {
+		if token.Expires.Unix() <= time.Now().Unix() {
+			database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
+		}
+	}()
+
 	if token.Id == 0 {
 		return false
 	}
 
-	return token.Expires.Unix() <= time.Now().Unix()
+	return token.Expires.Unix() > time.Now().Unix()
 }
 
 func InvalidateToken(tokenId interface{}) {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
-	token.Expires = time.Now().Add(-time.Second)
-
-	database.DB.Model(&models.Token{}).Save(&token)
+	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
 }

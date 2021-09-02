@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-func CreateToken(userId uint) uint {
+func CreateToken(userId uint) models.Token {
 	token := models.Token{
 		Expires: time.Now().Add(time.Hour * 2).Unix(),
 		UserId:  userId,
 	}
 	database.DB.Model(&models.Token{}).Create(&token)
 
-	return token.Id
+	return token
 }
 
 func IsTokenValid(tokenId interface{}) bool {

@@ -6,8 +6,6 @@ import (
 )
 
 func HandleException(c *fiber.Ctx) error {
-	// TODO: check if i work
-
 	defer func() {
 		if err := recover(); err != nil {
 			logger.LogError(err)

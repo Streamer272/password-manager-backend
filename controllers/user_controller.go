@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"password-manager-backend/logger"
 	"password-manager-backend/services"
 	"strconv"
 )
@@ -10,7 +11,8 @@ import (
 func Register(c *fiber.Ctx) error {
 	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
-		panic(err)
+		logger.LogError(err)
+		panic(fiber.ErrUnprocessableEntity)
 	}
 
 	return c.JSON(services.CreateUser(data["username"], data["password"]))
@@ -19,7 +21,8 @@ func Register(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
-		panic(err)
+		logger.LogError(err)
+		panic(fiber.ErrUnprocessableEntity)
 	}
 
 	user := services.GetUser(data["username"])
@@ -39,14 +42,15 @@ func Login(c *fiber.Ctx) error {
 	token := services.CreateToken(user.Id)
 
 	return c.JSON(fiber.Map{
-		"token": token,
+		"token": token.Id,
 	})
 }
 
 func Logout(c *fiber.Ctx) error {
 	var data map[string]interface{}
 	if err := c.BodyParser(&data); err != nil {
-		panic(err)
+		logger.LogError(err)
+		panic(fiber.ErrUnprocessableEntity)
 	}
 
 	tokenId, _ := strconv.Atoi(fmt.Sprintf("%v", data["tokenId"]))

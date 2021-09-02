@@ -29,6 +29,9 @@ func Setup(app *fiber.App) {
 
 	password := api.Group("/password", middleware.CheckToken)
 	password.Get("/", controllers.GetPasswords)
+	password.Get("/:name", controllers.GetPasswordsByName)
+	password.Put("/", controllers.CreatePassword)
+	password.Delete("/", controllers.DeletePassword)
 
 	app.Use(middleware.LogOnMiddleWare)
 }

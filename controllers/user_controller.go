@@ -1,28 +1,24 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"password-manager-backend/logger"
 	"password-manager-backend/services"
-	"strconv"
+	"password-manager-backend/utils"
 )
 
 func Register(c *fiber.Ctx) error {
-	var data map[string]interface{}
-	if err := c.BodyParser(&data); err != nil {
-		logger.LogError(err)
-		panic(fiber.ErrUnprocessableEntity)
+	data, err := utils.CheckData(c, "username", "password")
+	if err != nil {
+		return nil
 	}
 
 	return c.JSON(services.CreateUser(data["username"], data["password"]))
 }
 
 func Login(c *fiber.Ctx) error {
-	var data map[string]interface{}
-	if err := c.BodyParser(&data); err != nil {
-		logger.LogError(err)
-		panic(fiber.ErrUnprocessableEntity)
+	data, err := utils.CheckData(c, "username", "password")
+	if err != nil {
+		panic(err)
 	}
 
 	user := services.GetUser(data["username"])
@@ -47,15 +43,15 @@ func Login(c *fiber.Ctx) error {
 }
 
 func Logout(c *fiber.Ctx) error {
-	var data map[string]interface{}
-	if err := c.BodyParser(&data); err != nil {
-		logger.LogError(err)
-		panic(fiber.ErrUnprocessableEntity)
+	data, err := utils.CheckData(c, "tokenId")
+	if err != nil {
+		panic(err)
 	}
 
-	tokenId, _ := strconv.Atoi(fmt.Sprintf("%v", data["tokenId"]))
+	services.InvalidateToken(data["tokenId"])
 
-	services.InvalidateToken(uint(tokenId))
-
-	return c.SendStatus(fiber.StatusOK)
+	c.Status(fiber.StatusOK)
+	return c.JSON(fiber.Map{
+		"status": "ok",
+	})
 }

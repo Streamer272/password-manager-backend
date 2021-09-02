@@ -4,7 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"password-manager-backend/controllers"
-	"password-manager-backend/exceptions"
+	"password-manager-backend/errors"
 	"password-manager-backend/middleware"
 )
 
@@ -13,7 +13,7 @@ func Setup(app *fiber.App) {
 
 	app.Use(cors.New(cors.Config{}))
 
-	app.Use(exceptions.HandleException)
+	app.Use(errors.HandleException)
 	app.Use(middleware.CheckToken)
 
 	app.Get("/", func(c *fiber.Ctx) error {

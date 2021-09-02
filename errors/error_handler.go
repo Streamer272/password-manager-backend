@@ -1,6 +1,7 @@
-package exceptions
+package errors
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"password-manager-backend/logger"
 )
@@ -22,7 +23,10 @@ func HandleException(c *fiber.Ctx) error {
 				status = fiber.StatusInternalServerError
 			}
 
-			c.SendStatus(status)
+			c.Status(status)
+			c.JSON(ErrorMessage{
+				Error: fmt.Sprintf("%v", err),
+			})
 		}
 	}()
 

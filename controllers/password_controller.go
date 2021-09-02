@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
-	"password-manager-backend/logger"
 	"password-manager-backend/services"
+	"password-manager-backend/utils"
 )
 
 func GetPasswords(c *fiber.Ctx) error {
@@ -16,20 +16,18 @@ func GetPasswordsByName(c *fiber.Ctx) error {
 }
 
 func CreatePassword(c *fiber.Ctx) error {
-	var data map[string]interface{}
-	if err := c.BodyParser(&data); err != nil {
-		logger.LogError(err)
-		panic(fiber.ErrUnprocessableEntity)
+	data, err := utils.CheckData(c, "name", "value")
+	if err != nil {
+		panic(err)
 	}
 
 	return c.JSON(services.CreatePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
 }
 
 func DeletePassword(c *fiber.Ctx) error {
-	var data map[string]interface{}
-	if err := c.BodyParser(&data); err != nil {
-		logger.LogError(err)
-		panic(fiber.ErrUnprocessableEntity)
+	data, err := utils.CheckData(c, "name")
+	if err != nil {
+		panic(err)
 	}
 
 	return c.JSON(services.DeletePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"])))

@@ -9,7 +9,7 @@ import (
 )
 
 func Setup(app *fiber.App) {
-	// Fix DB not null (<nil>)
+	// TODO: Fix DB not null (<nil>)
 
 	app.Use(cors.New(cors.Config{}))
 
@@ -21,13 +21,13 @@ func Setup(app *fiber.App) {
 	})
 
 	api := app.Group("/api")
-	user := api.Group("/user")
-	password := api.Group("/password", middleware.CheckToken)
 
+	user := api.Group("/user")
 	user.Put("/register", controllers.Register)
 	user.Post("/login", controllers.Login)
 	user.Post("/logout", controllers.Logout)
 
+	password := api.Group("/password", middleware.CheckToken)
 	password.Get("/", controllers.GetPasswords)
 
 	app.Use(middleware.LogOnMiddleWare)

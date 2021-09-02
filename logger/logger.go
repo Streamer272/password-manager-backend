@@ -12,9 +12,7 @@ const (
 )
 
 func LogError(error interface{}) {
-	dateTime := time.Now().Format("02-01-2006 15:04:05")
-
-	Log("Error occurred: %v", dateTime, "ERROR", "0", error)
+	Log("Error occurred: %v", time.Now().Format("02-01-2006 15:04:05"), "ERROR", "0", error)
 }
 
 func Log(format string, vars ...interface{}) {

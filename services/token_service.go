@@ -8,7 +8,7 @@ import (
 
 func CreateToken(userId uint) uint {
 	token := models.Token{
-		Expires: time.Now().Add(time.Hour * 2),
+		Expires: time.Now().Add(time.Hour * 2).Unix(),
 		UserId:  userId,
 	}
 	database.DB.Model(&models.Token{}).Create(&token)
@@ -21,7 +21,7 @@ func IsTokenValid(tokenId interface{}) bool {
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
 	defer func() {
-		if token.Expires.Unix() <= time.Now().Unix() {
+		if token.Expires <= time.Now().Unix() {
 			database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
 		}
 	}()
@@ -30,12 +30,9 @@ func IsTokenValid(tokenId interface{}) bool {
 		return false
 	}
 
-	return token.Expires.Unix() > time.Now().Unix()
+	return token.Expires > time.Now().Unix()
 }
 
 func InvalidateToken(tokenId interface{}) {
-	var token models.Token
-	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
-
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
 }

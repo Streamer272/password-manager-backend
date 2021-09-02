@@ -5,12 +5,6 @@ import (
 	"password-manager-backend/logger"
 )
 
-type ErrorJson struct {
-	status int
-	err    interface{}
-	path   string
-}
-
 func HandleException(c *fiber.Ctx) error {
 	// TODO: check if i work
 
@@ -34,7 +28,5 @@ func HandleException(c *fiber.Ctx) error {
 		}
 	}()
 
-	c.Next()
-
-	return nil
+	return c.Next()
 }

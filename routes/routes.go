@@ -9,7 +9,7 @@ import (
 )
 
 func Setup(app *fiber.App) {
-	// TODO: Fix DB not null (<nil>)
+	// TODO: encrypt passwords
 
 	app.Use(cors.New(cors.Config{}))
 
@@ -32,6 +32,7 @@ func Setup(app *fiber.App) {
 	password.Get("/:name", controllers.GetPasswordsByName)
 	password.Put("/", controllers.CreatePassword)
 	password.Delete("/", controllers.DeletePassword)
+	password.Patch("/", controllers.UpdatePassword)
 
 	app.Use(middleware.LogOnMiddleWare)
 }

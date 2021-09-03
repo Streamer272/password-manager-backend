@@ -39,14 +39,28 @@ func CreatePassword(tokenId interface{}, name string, value string) models.Passw
 	return password
 }
 
-func DeletePassword(tokenId interface{}, name string) models.Password {
+func DeletePassword(tokenId interface{}, passwordId string) models.Password {
 	var token models.Token
 	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
 
 	var password models.Password
-	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("name LIKE ?", "%"+name+"%").First(&password)
+	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("id = ?", passwordId).First(&password)
 
-	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("name LIKE ?", "%"+name+"%").Delete(&models.Password{})
+	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("id = ?", passwordId).Delete(&models.Password{})
+
+	return password
+}
+
+func UpdatePassword(tokenId interface{}, passwordId interface{}, name string, value string) models.Password {
+	var token models.Token
+	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
+
+	// it doesn't work the other way
+	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("id = ?", passwordId).Update("name", name)
+	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("id = ?", passwordId).Update("value", value)
+
+	var password models.Password
+	database.DB.Model(&models.Password{}).Where("user_id = ?", token.UserId).Where("id = ?", passwordId).First(&password)
 
 	return password
 }

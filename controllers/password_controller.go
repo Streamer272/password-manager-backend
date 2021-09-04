@@ -18,7 +18,7 @@ func GetPasswordsByName(c *fiber.Ctx) error {
 func CreatePassword(c *fiber.Ctx) error {
 	data, err := utils.CheckData(c, "name", "value")
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	return c.JSON(services.CreatePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
@@ -27,7 +27,7 @@ func CreatePassword(c *fiber.Ctx) error {
 func DeletePassword(c *fiber.Ctx) error {
 	data, err := utils.CheckData(c, "passwordId")
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	return c.JSON(services.DeletePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["passwordId"])))
@@ -36,7 +36,7 @@ func DeletePassword(c *fiber.Ctx) error {
 func UpdatePassword(c *fiber.Ctx) error {
 	data, err := utils.CheckData(c, "passwordId", "name", "value")
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	return c.JSON(services.UpdatePassword(c.Get("tokenId"), data["passwordId"], fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"password-manager-backend/errors"
 	"password-manager-backend/services"
 	"password-manager-backend/utils"
 )
@@ -18,7 +19,7 @@ func Register(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 	data, err := utils.CheckData(c, "username", "password")
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	user := services.GetUser(data["username"])
@@ -26,13 +27,19 @@ func Login(c *fiber.Ctx) error {
 	if user.Id == 0 {
 		c.Status(fiber.StatusBadRequest)
 
-		return c.SendString("User not found")
+		return c.JSON(errors.ErrorMessage{
+			Error:   "BadRequest",
+			Message: "User not found",
+		})
 	}
 
 	if user.Password != data["password"] {
 		c.Status(fiber.StatusBadRequest)
 
-		return c.SendString("Incorrect password")
+		return c.JSON(errors.ErrorMessage{
+			Error:   "BadRequest",
+			Message: "Incorrect password",
+		})
 	}
 
 	token := services.CreateToken(user.Id)
@@ -45,7 +52,7 @@ func Login(c *fiber.Ctx) error {
 func Logout(c *fiber.Ctx) error {
 	data, err := utils.CheckData(c, "tokenId")
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	services.InvalidateToken(data["tokenId"])

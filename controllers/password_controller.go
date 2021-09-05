@@ -8,11 +8,15 @@ import (
 )
 
 func GetPasswords(c *fiber.Ctx) error {
-	return c.JSON(services.GetAllPasswords(c.Get("tokenId")))
+	c.JSON(services.GetAllPasswords(c.Get("tokenId")))
+
+	return c.Next()
 }
 
 func GetPasswordsByName(c *fiber.Ctx) error {
-	return c.JSON(services.GetPasswordsByName(c.Get("tokenId"), fmt.Sprintf("%v", c.Params("name"))))
+	c.JSON(services.GetPasswordsByName(c.Get("tokenId"), fmt.Sprintf("%v", c.Params("name"))))
+
+	return c.Next()
 }
 
 func CreatePassword(c *fiber.Ctx) error {
@@ -21,7 +25,9 @@ func CreatePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	return c.JSON(services.CreatePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+	c.JSON(services.CreatePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+
+	return c.Next()
 }
 
 func DeletePassword(c *fiber.Ctx) error {
@@ -30,7 +36,9 @@ func DeletePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	return c.JSON(services.DeletePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["passwordId"])))
+	c.JSON(services.DeletePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["passwordId"])))
+
+	return c.Next()
 }
 
 func UpdatePassword(c *fiber.Ctx) error {
@@ -39,5 +47,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	return c.JSON(services.UpdatePassword(c.Get("tokenId"), data["passwordId"], fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+	c.JSON(services.UpdatePassword(c.Get("tokenId"), data["passwordId"], fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+
+	return c.Next()
 }

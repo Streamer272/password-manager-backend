@@ -13,7 +13,9 @@ func Register(c *fiber.Ctx) error {
 		return nil
 	}
 
-	return c.JSON(services.CreateUser(data["username"], data["password"]))
+	c.JSON(services.CreateUser(data["username"], data["password"]))
+
+	return c.Next()
 }
 
 func Login(c *fiber.Ctx) error {
@@ -44,9 +46,11 @@ func Login(c *fiber.Ctx) error {
 
 	token := services.CreateToken(user.Id)
 
-	return c.JSON(fiber.Map{
+	c.JSON(fiber.Map{
 		"token": token.Id,
 	})
+
+	return c.Next()
 }
 
 func Logout(c *fiber.Ctx) error {
@@ -58,7 +62,9 @@ func Logout(c *fiber.Ctx) error {
 	services.InvalidateToken(data["tokenId"])
 
 	c.Status(fiber.StatusOK)
-	return c.JSON(fiber.Map{
+	c.JSON(fiber.Map{
 		"status": "ok",
 	})
+
+	return c.Next()
 }

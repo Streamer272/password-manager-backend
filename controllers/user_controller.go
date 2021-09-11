@@ -13,9 +13,21 @@ func Register(c *fiber.Ctx) error {
 		return nil
 	}
 
-	err = c.JSON(services.CreateUser(data["username"], data["password"]))
+	user, err := services.CreateUser(data["username"], data["password"])
 	if err != nil {
-		panic(err)
+		c.Status(fiber.StatusBadRequest)
+		err := c.JSON(errors.ErrorMessage{
+			Error:   "BadRequest",
+			Message: "User already exists",
+		})
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		err = c.JSON(user)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return c.Next()
@@ -60,12 +72,12 @@ func Login(c *fiber.Ctx) error {
 }
 
 func Logout(c *fiber.Ctx) error {
-	data, err := utils.CheckData(c, "tokenId")
+	data, err := utils.CheckData(c, "token")
 	if err != nil {
 		return nil
 	}
 
-	services.InvalidateToken(data["tokenId"])
+	services.InvalidateToken(data["token"])
 
 	c.Status(fiber.StatusOK)
 	err = c.JSON(fiber.Map{

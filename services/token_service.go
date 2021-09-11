@@ -16,23 +16,23 @@ func CreateToken(userId uint) models.Token {
 	return token
 }
 
-func IsTokenValid(tokenId interface{}) bool {
-	var token models.Token
-	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).First(&token)
+func IsTokenValid(token interface{}) bool {
+	var tokenModel models.Token
+	database.DB.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
 
 	defer func() {
-		if token.Expires <= time.Now().Unix() {
-			database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
+		if tokenModel.Expires <= time.Now().Unix() {
+			database.DB.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
 		}
 	}()
 
-	if token.Id == 0 {
+	if tokenModel.Id == 0 {
 		return false
 	}
 
-	return token.Expires > time.Now().Unix()
+	return tokenModel.Expires > time.Now().Unix()
 }
 
-func InvalidateToken(tokenId interface{}) {
-	database.DB.Model(&models.Token{}).Where("id = ?", tokenId).Delete(&models.Token{})
+func InvalidateToken(token interface{}) {
+	database.DB.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
 }

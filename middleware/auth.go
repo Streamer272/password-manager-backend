@@ -12,15 +12,15 @@ func CheckToken(c *fiber.Ctx) error {
 		return c.Next()
 	}
 
-	if c.Get("tokenId") == "" {
+	if c.Get("token") == "" {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(errors.ErrorMessage{
 			Error:   "Unauthorized",
-			Message: "Missing `tokenId` header",
+			Message: "Missing `token` header",
 		})
 	}
 
-	if !services.IsTokenValid(c.Get("tokenId")) {
+	if !services.IsTokenValid(c.Get("token")) {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(errors.ErrorMessage{
 			Error:   "Unauthorized",

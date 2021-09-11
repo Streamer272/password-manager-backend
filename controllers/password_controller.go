@@ -8,7 +8,7 @@ import (
 )
 
 func GetPasswords(c *fiber.Ctx) error {
-	err := c.JSON(services.GetAllPasswords(c.Get("tokenId")))
+	err := c.JSON(services.GetAllPasswords(c.Get("token")))
 	if err != nil {
 		panic(err)
 	}
@@ -17,7 +17,7 @@ func GetPasswords(c *fiber.Ctx) error {
 }
 
 func GetPasswordsByName(c *fiber.Ctx) error {
-	err := c.JSON(services.GetPasswordsByName(c.Get("tokenId"), fmt.Sprintf("%v", c.Params("name"))))
+	err := c.JSON(services.GetPasswordsByName(c.Get("token"), fmt.Sprintf("%v", c.Params("name"))))
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +31,7 @@ func CreatePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	err = c.JSON(services.CreatePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+	err = c.JSON(services.CreatePassword(c.Get("token"), fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
 	if err != nil {
 		panic(err)
 	}
@@ -45,7 +45,7 @@ func DeletePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	err = c.JSON(services.DeletePassword(c.Get("tokenId"), fmt.Sprintf("%v", data["passwordId"])))
+	err = c.JSON(services.DeletePassword(c.Get("token"), fmt.Sprintf("%v", data["passwordId"])))
 	if err != nil {
 		panic(err)
 	}
@@ -59,7 +59,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 		return nil
 	}
 
-	err = c.JSON(services.UpdatePassword(c.Get("tokenId"), data["passwordId"], fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
+	err = c.JSON(services.UpdatePassword(c.Get("token"), data["passwordId"], fmt.Sprintf("%v", data["name"]), fmt.Sprintf("%v", data["value"])))
 	if err != nil {
 		panic(err)
 	}

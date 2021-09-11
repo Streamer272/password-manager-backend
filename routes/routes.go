@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"password-manager-backend/controllers"
 	"password-manager-backend/errors"
+	"password-manager-backend/logger"
 	"password-manager-backend/middleware"
 	"time"
 )
@@ -18,6 +19,12 @@ func Setup(app *fiber.App) {
 		AllowCredentials: true,
 	}))
 
+	app.Use(func(c *fiber.Ctx) error {
+		c.Set("Access-Control-Allow-Origin", "*")
+
+		return c.Next()
+	})
+
 	app.Use(middleware.LogOnMiddleWare)
 	app.Use(errors.HandleException)
 	app.Use(middleware.CheckToken)
@@ -29,7 +36,9 @@ func Setup(app *fiber.App) {
 		Max:        50,
 		Expiration: 10 * time.Second,
 		LimitReached: func(c *fiber.Ctx) error {
-			c.Status(429)
+			logger.LogError(fiber.ErrTooManyRequests)
+
+			c.Status(fiber.StatusTooManyRequests)
 			return c.JSON(errors.ErrorMessage{
 				Error:   "TooManyRequests",
 				Message: "",
@@ -37,9 +46,7 @@ func Setup(app *fiber.App) {
 		},
 	}))
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Welcome!")
-	})
+	app.Get("/", controllers.Welcome)
 
 	api := app.Group("/api")
 

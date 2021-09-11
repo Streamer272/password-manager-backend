@@ -7,6 +7,8 @@ import (
 )
 
 func CreateToken(userId uint) models.Token {
+	deleteAllTokensByUserId(userId)
+
 	token := models.Token{
 		Expires: time.Now().Add(time.Hour * 2).Unix(),
 		UserId:  userId,
@@ -35,4 +37,8 @@ func IsTokenValid(token interface{}) bool {
 
 func InvalidateToken(token interface{}) {
 	database.DB.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
+}
+
+func deleteAllTokensByUserId(userId uint) {
+	database.DB.Model(&models.Token{}).Where("user_id = ?", userId).Delete(&models.Token{})
 }

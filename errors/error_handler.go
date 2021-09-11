@@ -24,9 +24,12 @@ func HandleException(c *fiber.Ctx) error {
 			}
 
 			c.Status(status)
-			c.JSON(ErrorMessage{
+			err := c.JSON(ErrorMessage{
 				Error: fmt.Sprintf("%v", err),
 			})
+			if err != nil {
+				logger.LogError(err)
+			}
 		}
 	}()
 

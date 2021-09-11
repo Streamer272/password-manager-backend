@@ -10,6 +10,7 @@ import (
 
 func Setup(app *fiber.App) {
 	// TODO: encrypt passwords
+	// TODO: add tests
 
 	app.Use(cors.New(cors.Config{}))
 

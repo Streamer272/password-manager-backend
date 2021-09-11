@@ -14,8 +14,11 @@ func Setup(app *fiber.App) {
 	// TODO: encrypt passwords
 	// TODO: add tests
 
-	app.Use(cors.New(cors.Config{}))
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
+	app.Use(middleware.LogOnMiddleWare)
 	app.Use(errors.HandleException)
 	app.Use(middleware.CheckToken)
 
@@ -51,6 +54,4 @@ func Setup(app *fiber.App) {
 	password.Put("/", controllers.CreatePassword)
 	password.Delete("/", controllers.DeletePassword)
 	password.Patch("/", controllers.UpdatePassword)
-
-	app.Use(middleware.LogOnMiddleWare)
 }

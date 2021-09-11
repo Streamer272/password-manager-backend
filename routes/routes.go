@@ -54,4 +54,8 @@ func Setup(app *fiber.App) {
 	password.Put("/", controllers.CreatePassword)
 	password.Delete("/", controllers.DeletePassword)
 	password.Patch("/", controllers.UpdatePassword)
+
+	app.Use(func(c *fiber.Ctx) error {
+		return nil
+	})
 }

@@ -1,11 +1,14 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"password-manager-backend/controllers"
 	"password-manager-backend/errors"
 	"password-manager-backend/middleware"
+	"time"
 )
 
 func Setup(app *fiber.App) {
@@ -16,6 +19,22 @@ func Setup(app *fiber.App) {
 
 	app.Use(errors.HandleException)
 	app.Use(middleware.CheckToken)
+
+	app.Use(limiter.New(limiter.Config{
+		Next: func(c *fiber.Ctx) bool {
+			fmt.Printf("Hit from %v\n", c.IP())
+			return c.IP() == "127.0.0.1"
+		},
+		Max:        50,
+		Expiration: 10 * time.Second,
+		LimitReached: func(c *fiber.Ctx) error {
+			c.Status(429)
+			return c.JSON(errors.ErrorMessage{
+				Error:   "TooManyRequests",
+				Message: "",
+			})
+		},
+	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Welcome!")

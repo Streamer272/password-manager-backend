@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -22,7 +21,6 @@ func Setup(app *fiber.App) {
 
 	app.Use(limiter.New(limiter.Config{
 		Next: func(c *fiber.Ctx) bool {
-			fmt.Printf("Hit from %v\n", c.IP())
 			return c.IP() == "127.0.0.1"
 		},
 		Max:        50,

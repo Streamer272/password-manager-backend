@@ -2,28 +2,18 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"password-manager-backend/controllers"
 	"password-manager-backend/errors"
 	"password-manager-backend/logger"
 	"password-manager-backend/middleware"
-	"time"
 )
 
 func Setup(app *fiber.App) {
 	// TODO: encrypt passwords
 	// TODO: add tests
 
-	app.Use(cors.New(cors.Config{
-		AllowCredentials: true,
-	}))
-
-	app.Use(func(c *fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "*")
-
-		return c.Next()
-	})
+	app.Use(middleware.Cors)
 
 	app.Use(middleware.LogOnMiddleWare)
 	app.Use(errors.HandleException)
@@ -34,7 +24,7 @@ func Setup(app *fiber.App) {
 			return c.IP() == "127.0.0.1"
 		},
 		Max:        50,
-		Expiration: 10 * time.Second,
+		Expiration: 0,
 		LimitReached: func(c *fiber.Ctx) error {
 			logger.LogError(fiber.ErrTooManyRequests)
 

@@ -13,7 +13,7 @@ func main() {
 		Prefork:       false,
 		CaseSensitive: false,
 		StrictRouting: false,
-		ServerHeader:  "Fiber",
+		ServerHeader:  "Password Manager",
 		AppName:       "Password Manager",
 	})
 

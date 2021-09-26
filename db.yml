@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'password_manager'
+      MYSQL_USER: 'password_manager_user'
+      MYSQL_PASSWORD: 'password_manager_password'
+      MYSQL_ROOT_PASSWORD: 'root_password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'

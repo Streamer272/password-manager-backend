@@ -11,7 +11,7 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	conn, err := gorm.Open(mysql.Open("password_manager_user:password_manager_password@/password_manager"), &gorm.Config{
+	conn, err := gorm.Open(mysql.Open("password_manager_user:password_manager_password@tcp(localhost:3306)/password_manager"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {

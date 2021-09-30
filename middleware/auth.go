@@ -24,7 +24,7 @@ func CheckToken(c *fiber.Ctx) error {
 		c.Status(fiber.StatusUnauthorized)
 		return c.JSON(errors.ErrorMessage{
 			Error:   "Unauthorized",
-			Message: "Token is not valid",
+			Message: "Token not valid",
 		})
 	}
 

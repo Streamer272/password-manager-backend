@@ -59,10 +59,10 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token := services.CreateToken(user.Id)
+	token := services.GetHashById(services.CreateToken(user.Id).Id)
 
 	err = c.JSON(fiber.Map{
-		"token": token.Id,
+		"token": token,
 	})
 	if err != nil {
 		panic(err)
@@ -77,14 +77,25 @@ func Logout(c *fiber.Ctx) error {
 		return nil
 	}
 
-	services.InvalidateToken(data["token"])
+	succeeded := services.InvalidateToken(data["token"])
 
-	c.Status(fiber.StatusOK)
-	err = c.JSON(fiber.Map{
-		"status": "ok",
-	})
-	if err != nil {
-		panic(err)
+	if succeeded {
+		c.Status(fiber.StatusOK)
+		err = c.JSON(fiber.Map{
+			"status": "ok",
+		})
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		c.Status(fiber.StatusUnauthorized)
+		err := c.JSON(errors.ErrorMessage{
+			Error:   "Unauthorized",
+			Message: "Token not valid",
+		})
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return c.Next()

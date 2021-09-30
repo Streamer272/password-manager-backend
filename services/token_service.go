@@ -13,18 +13,18 @@ func CreateToken(userId uint) models.Token {
 		Expires: time.Now().Add(time.Hour * 2).Unix(),
 		UserId:  userId,
 	}
-	database.DB.Model(&models.Token{}).Create(&token)
+	database.Mysql.Model(&models.Token{}).Create(&token)
 
 	return token
 }
 
 func IsTokenValid(token interface{}) bool {
 	var tokenModel models.Token
-	database.DB.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
 
 	defer func() {
 		if tokenModel.Expires <= time.Now().Unix() {
-			database.DB.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
+			database.Mysql.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
 		}
 	}()
 
@@ -36,9 +36,9 @@ func IsTokenValid(token interface{}) bool {
 }
 
 func InvalidateToken(token interface{}) {
-	database.DB.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
+	database.Mysql.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
 }
 
 func deleteAllTokensByUserId(userId uint) {
-	database.DB.Model(&models.Token{}).Where("user_id = ?", userId).Delete(&models.Token{})
+	database.Mysql.Model(&models.Token{}).Where("user_id = ?", userId).Delete(&models.Token{})
 }

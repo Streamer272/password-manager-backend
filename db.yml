@@ -1,15 +1,31 @@
 version: '3.3'
 
 services:
-  db:
+  mysql:
     image: mysql:latest
     restart: always
+
     environment:
       MYSQL_DATABASE: 'password_manager'
       MYSQL_USER: 'password_manager_user'
       MYSQL_PASSWORD: 'password_manager_password'
       MYSQL_ROOT_PASSWORD: 'root_password'
+
     ports:
       - '3306:3306'
+
     expose:
       - '3306'
+
+  redis:
+    image: redis:latest
+    restart: always
+
+    environment:
+      REDIS_PASSWORD: 'root_password'
+
+    ports:
+      - '6379:6379'
+
+    expose:
+      - '6379'

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	database.Connect()
+	database.Init()
 
 	app := fiber.New(fiber.Config{
 		Prefork:       false,

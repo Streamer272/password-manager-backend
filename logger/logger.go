@@ -6,37 +6,39 @@ import (
 	"time"
 )
 
-const (
-	Prefix      = "[%v %v %v] "
-	BaseMessage = "%v --> %v"
-)
-
 func LogError(error interface{}) {
-	Log("Error occurred: %v", time.Now().Format("02-01-2006 15:04:05"), "ERROR", "0", error)
+	Log(fmt.Sprintf("[%v ERROR] %v\n", time.Now().Format("02-01-2006 15:04:05"), error))
 }
 
-func Log(format string, vars ...interface{}) {
+func LogWarning(warning interface{}) {
+	Log(fmt.Sprintf("[%v WARNING] %v\n", time.Now().Format("02-01-2006 15:04:05"), warning))
+}
+
+func LogInfo(info interface{}) {
+	Log(fmt.Sprintf("[%v INFO] %v\n", time.Now().Format("02-01-2006 15:04:05"), info))
+}
+
+func Log(msg string) {
 	file, err := os.OpenFile("log/"+time.Now().Format("02_01_2006")+".log", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
-	if err != nil {
-		panic(err)
-	}
-
-	dateTime := time.Now().Format("02-01-2006 15:04:05")
-
-	fmt.Printf(Prefix+format+"\n", vars...)
-
-	_, err = fmt.Fprintf(file, Prefix+format+"\n", vars...)
-	if err != nil {
-		panic(err)
-	}
 
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Printf(Prefix+"Error (%v) occured while logging (%v)...\n", dateTime, "ERROR", "0", err, format)
+			fmt.Printf("[%v ERROR] Error (%v) occured while logging %v\n", time.Now().Format("02-01-2006 15:04:05"), err, msg)
 		}
 
 		if err = file.Close(); err != nil {
-			fmt.Printf(Prefix+"Error (%v) occured while closing log file...\n", dateTime, "ERROR", "0", err)
+			fmt.Printf("[%v ERROR] Error (%v) occured while closing log file\n", time.Now().Format("02-01-2006 15:04:05"), err)
 		}
 	}()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf(msg)
+
+	_, err = fmt.Fprintf(file, msg)
+	if err != nil {
+		panic(err)
+	}
 }

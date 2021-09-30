@@ -12,7 +12,7 @@ func CreateUser(username interface{}, password interface{}) (models.User, error)
 		Username: fmt.Sprintf("%v", username),
 		Password: fmt.Sprintf("%v", password),
 	}
-	database.DB.Model(&models.User{}).Create(&user)
+	database.Mysql.Model(&models.User{}).Create(&user)
 
 	if user.Id == 0 {
 		return user, fiber.ErrBadRequest
@@ -23,7 +23,7 @@ func CreateUser(username interface{}, password interface{}) (models.User, error)
 
 func GetUser(username interface{}) models.User {
 	var user models.User
-	database.DB.Model(&models.User{}).Where("username = ?", username).First(&user)
+	database.Mysql.Model(&models.User{}).Where("username = ?", username).First(&user)
 
 	return user
 }

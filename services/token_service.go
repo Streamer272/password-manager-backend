@@ -32,11 +32,11 @@ func CreateToken(userId uint) models.Token {
 
 func IsTokenValid(token interface{}) bool {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	defer func() {
 		if tokenModel.Expires <= time.Now().Unix() {
-			database.Mysql.Model(&models.Token{}).Where("id = ?", token).Delete(&models.Token{})
+			database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).Delete(&models.Token{})
 		}
 	}()
 

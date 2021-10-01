@@ -7,7 +7,7 @@ import (
 
 func GetAllPasswords(token interface{}) []models.Password {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	var passwords []models.Password
 	database.Mysql.Model(&models.Password{}).Where("user_id = ?", tokenModel.UserId).Find(&passwords)
@@ -17,7 +17,7 @@ func GetAllPasswords(token interface{}) []models.Password {
 
 func GetPasswordsByName(token interface{}, name string) []models.Password {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	var passwords []models.Password
 	database.Mysql.Model(&models.Password{}).Where("user_id = ?", tokenModel.UserId).Where("name LIKE ?", "%"+name+"%").Find(&passwords)
@@ -27,7 +27,7 @@ func GetPasswordsByName(token interface{}, name string) []models.Password {
 
 func CreatePassword(token interface{}, name string, value string) models.Password {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	password := models.Password{
 		Name:   name,
@@ -41,7 +41,7 @@ func CreatePassword(token interface{}, name string, value string) models.Passwor
 
 func DeletePassword(token interface{}, passwordId string) models.Password {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	var password models.Password
 	database.Mysql.Model(&models.Password{}).Where("user_id = ?", tokenModel.UserId).Where("id = ?", passwordId).First(&password)
@@ -53,7 +53,7 @@ func DeletePassword(token interface{}, passwordId string) models.Password {
 
 func UpdatePassword(token interface{}, passwordId interface{}, name string, value string) models.Password {
 	var tokenModel models.Token
-	database.Mysql.Model(&models.Token{}).Where("id = ?", token).First(&tokenModel)
+	database.Mysql.Model(&models.Token{}).Where("uuid = ?", token).First(&tokenModel)
 
 	// it doesn't work the other way
 	database.Mysql.Model(&models.Password{}).Where("user_id = ?", tokenModel.UserId).Where("id = ?", passwordId).Update("name", name)

@@ -3,6 +3,7 @@ package services
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"math/rand"
 	"password-manager-backend/database"
 	"password-manager-backend/models"
 	"strconv"
@@ -19,13 +20,8 @@ func GetHashById(id uint) string {
 func CreateToken(userId uint) models.Token {
 	deleteAllTokensByUserId(userId)
 
-	// FIXME
-	var highestToken models.Token
-	database.Mysql.Model(&models.Token{}).Last(&highestToken)
-	// till here
-
 	token := models.Token{
-		Uuid:    GetHashById(highestToken.Id + 1),
+		Uuid:    GetHashById(userId + uint(rand.Intn(100))),
 		Expires: time.Now().Add(time.Hour * 2).Unix(),
 		UserId:  userId,
 	}

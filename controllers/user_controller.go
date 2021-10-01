@@ -59,10 +59,10 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token := services.GetHashById(services.CreateToken(user.Id).Id)
+	token := services.CreateToken(user.Id)
 
 	err = c.JSON(fiber.Map{
-		"token": token,
+		"token": token.Uuid,
 	})
 	if err != nil {
 		panic(err)

@@ -16,16 +16,3 @@ services:
 
     expose:
       - '3306'
-
-  redis:
-    image: redis:latest
-    restart: always
-
-    environment:
-      REDIS_PASSWORD: 'root_password'
-
-    ports:
-      - '6379:6379'
-
-    expose:
-      - '6379'

@@ -4,6 +4,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"os"
 	customLogger "password-manager-backend/logger"
 	"password-manager-backend/models"
 )
@@ -14,6 +15,7 @@ func ConnectMysql() {
 	defer func() {
 		if err := recover(); err != nil {
 			customLogger.LogError("Couldn't connect to MySQL database")
+			os.Exit(1)
 		} else {
 			customLogger.LogInfo("Connected to MySQL database")
 		}

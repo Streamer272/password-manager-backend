@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"password-manager-backend/controllers"
 	"password-manager-backend/errors"
@@ -13,7 +14,10 @@ func Setup(app *fiber.App) {
 	// TODO: encrypt passwords
 	// TODO: add tests
 
-	app.Use(middleware.Cors)
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "*",
+	}))
 
 	app.Use(middleware.LogOnMiddleWare)
 	app.Use(errors.HandleException)
